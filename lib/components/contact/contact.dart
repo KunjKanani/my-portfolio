@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_protfolio/components/contact/contactMobile.dart';
 import 'package:my_protfolio/components/contact/contactWeb.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:my_protfolio/responsive.dart';
 
 class Contact extends StatefulWidget {
   @override
@@ -35,13 +35,9 @@ class _ContactState extends State<Contact> with SingleTickerProviderStateMixin {
       builder: (context, child) => Padding(
         padding:
             EdgeInsets.only(right: 200 - _animationController.value, top: 20.0),
-        child: ResponsiveBuilder(
-          builder: (context, sizingInformation) {
-            return sizingInformation.isMobile || sizingInformation.isTablet
-                ? ContactMobile()
-                : ContactWeb();
-          },
-        ),
+        child: Responsive.isMobile(context) || Responsive.isTablet(context)
+            ? ContactMobile()
+            : ContactWeb(),
       ),
       animation: _animationController,
     );

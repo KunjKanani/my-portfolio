@@ -52,6 +52,7 @@ class Expertise extends StatelessWidget {
         return ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return Container(
               decoration: BoxDecoration(
@@ -115,6 +116,7 @@ class InterMediate extends StatelessWidget {
     return Consumer<MySchedule>(
       builder: (context, value, child) => ListView.builder(
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         itemBuilder: (BuildContext context, int index) {
           // return interMediateList.elementAt(index);

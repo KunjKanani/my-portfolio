@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_protfolio/listenerProviderForApp/schedule.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -198,7 +197,8 @@ class ContactWeb extends StatelessWidget {
         Text(
           "Being a tea fan, \n if you would like to discuss some of your project or interview \n me, \n feel free to invite me over a cup of tea by dropping mail.",
           textAlign: TextAlign.center,
-          style: GoogleFonts.indieFlower(
+          style: TextStyle(
+            fontFamily: "indieFlower",
             fontSize: 38,
             fontWeight: FontWeight.w700,
           ),

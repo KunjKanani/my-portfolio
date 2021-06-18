@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:my_protfolio/responsive.dart';
 
-import 'package:my_protfolio/components/contact/contact.dart';
-import 'package:my_protfolio/components/resume/resume.dart';
-import 'package:my_protfolio/components/skillView/skiillAndWork.dart';
-import 'package:my_protfolio/components/widgets/introView/IntroView.dart';
+import 'package:provider/provider.dart';
+import 'package:my_protfolio/components/contact/contact.dart'
+    deferred as contentPage;
+import 'package:my_protfolio/components/resume/resume.dart'
+    deferred as resumePage;
+import 'package:my_protfolio/components/skillView/skillAndWork.dart'
+    deferred as skillAndWorkPage;
+import 'package:my_protfolio/components/widgets/introView/IntroView.dart'
+    deferred as introPage;
 import 'package:my_protfolio/components/widgets/navbar/mobileNavbar.dart';
 import 'package:my_protfolio/components/widgets/navbar/mobileNavigationDrawer.dart';
 import 'package:my_protfolio/listenerProviderForApp/schedule.dart';
-import 'package:provider/provider.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 import 'components/widgets/navbar/NavbarView.dart';
 
 void main() {
@@ -40,46 +44,101 @@ class PortfolioApp extends StatefulWidget {
 }
 
 class _PortfolioAppState extends State<PortfolioApp> {
+  final EdgeInsets mobileViewPadding = EdgeInsets.symmetric(
+    horizontal: 30.0,
+    vertical: 20.0,
+  );
+  final EdgeInsets desktopViewPadding = EdgeInsets.symmetric(
+    horizontal: 140.0,
+    vertical: 20.0,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(
-      builder: (context, sizingInformation) {
-        var mobileView = sizingInformation.deviceScreenType ==
-                    DeviceScreenType.tablet ||
-                sizingInformation.deviceScreenType == DeviceScreenType.mobile
+    var mobileView =
+        Responsive.isMobile(context) || Responsive.isTablet(context)
             ? true
             : false;
 
-        return Scaffold(
-          drawer: mobileView ? NavigationDrawer() : null,
-          body: Padding(
-            padding: mobileView
-                ? EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0)
-                : EdgeInsets.symmetric(horizontal: 140.0, vertical: 20.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  mobileView ? MobileNavbar() : NavbarView(),
-                  Consumer<MySchedule>(
-                    builder: (BuildContext context, value, Widget child) {
-                      if (value.viewName == "Intro") {
-                        return IntroView();
-                      } else if (value.viewName == "Skill&Work") {
-                        return SkillAndWork();
-                      } else if (value.viewName == "Resume") {
-                        return Resume();
-                      } else if (value.viewName == "Contact") {
-                        return Contact();
-                      }
-                      return Container();
-                    },
+    return Scaffold(
+      drawer: mobileView ? NavigationDrawer() : null,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            mobileView
+                ? Padding(
+                    padding:
+                        mobileView ? mobileViewPadding : desktopViewPadding,
+                    child: MobileNavbar())
+                : Padding(
+                    padding:
+                        mobileView ? mobileViewPadding : desktopViewPadding,
+                    child: NavbarView(),
                   ),
-                ],
+            Padding(
+              padding: mobileView ? mobileViewPadding : desktopViewPadding,
+              child: Consumer<MySchedule>(
+                builder: (BuildContext context, value, Widget child) {
+                  if (value.viewName == "Intro") {
+                    return FutureBuilder(
+                      future: introPage.loadLibrary(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return introPage.IntroView();
+                        } else {
+                          return LinearProgressIndicator(
+                            minHeight: 6,
+                          );
+                        }
+                      },
+                    );
+                  } else if (value.viewName == "Skill&Work") {
+                    return FutureBuilder(
+                      future: skillAndWorkPage.loadLibrary(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return skillAndWorkPage.SkillAndWork();
+                        } else {
+                          return LinearProgressIndicator(
+                            minHeight: 6,
+                          );
+                        }
+                      },
+                    );
+                  } else if (value.viewName == "Resume") {
+                    return FutureBuilder(
+                      future: resumePage.loadLibrary(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return resumePage.Resume();
+                        } else {
+                          return LinearProgressIndicator(
+                            minHeight: 6,
+                          );
+                        }
+                      },
+                    );
+                  } else if (value.viewName == "Contact") {
+                    return FutureBuilder(
+                      future: contentPage.loadLibrary(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return contentPage.Contact();
+                        } else {
+                          return LinearProgressIndicator(
+                            minHeight: 6,
+                          );
+                        }
+                      },
+                    );
+                  }
+                  return Container();
+                },
               ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }
