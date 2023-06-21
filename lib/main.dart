@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_protfolio/components/widgets/navbar/NavbarView.dart';
 import 'package:my_protfolio/responsive.dart';
 
 import 'package:provider/provider.dart';
@@ -13,7 +14,6 @@ import 'package:my_protfolio/components/widgets/introView/IntroView.dart'
 import 'package:my_protfolio/components/widgets/navbar/mobileNavbar.dart';
 import 'package:my_protfolio/components/widgets/navbar/mobileNavigationDrawer.dart';
 import 'package:my_protfolio/listenerProviderForApp/schedule.dart';
-import 'components/widgets/navbar/NavbarView.dart';
 
 void main() {
   runApp(App());
@@ -61,7 +61,7 @@ class _PortfolioAppState extends State<PortfolioApp> {
             : false;
 
     return Scaffold(
-      drawer: mobileView ? NavigationDrawer() : null,
+      drawer: mobileView ? MobileNavigationDrawer() : null,
       body: SingleChildScrollView(
         child: Column(
           children: [
